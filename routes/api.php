@@ -25,5 +25,6 @@ Route::group(['prefix' => 'auth'], function(){
     Route::post('login', 'AuthCOntroller@login');
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('user', 'AuthCOntroller@user');
+        Route::delete('logout', 'AuthCOntroller@logout');
     });
 });

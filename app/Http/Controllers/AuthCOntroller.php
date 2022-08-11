@@ -79,4 +79,11 @@ class AuthCOntroller extends Controller
             "Họ tên" => "Nguyễn Văn A"
         ]);
     }
+
+    public function logout(Request $request){
+        $request->user()->token()->revoke();
+        return response()->json([
+            'status' => "success"
+        ]);
+    }
 }

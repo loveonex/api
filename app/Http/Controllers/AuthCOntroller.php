@@ -74,4 +74,9 @@ class AuthCOntroller extends Controller
                 ->toDateTimeString()
         ]);
     }
+    public function user(){
+        return response()->json([
+            "Họ tên" => "Nguyễn Văn A"
+        ]);
+    }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -51,6 +53,25 @@ class AuthCOntroller extends Controller
                 'status' => "Fails",
                 "error" => $validator->errors()->toArray()
             ]);
-        }    
+        }
+        $credentials = request(['email', 'password']);
+        if(!Auth::attempt($credentials)) {
+            return response()->json([
+                'status' => false,
+                'message' => "Sai tài khoản hoặc mật khẩu"
+            ]);
+        }
+
+        $user = $request->user();
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+        $token->expires_at = Carbon::now()->addWeek(1);
+        $token->save();
+        return response()->json([
+            'status' => 'success',
+            'access_token' => $tokenResult->accessToken,
+            'expires_at' => Carbon::parse($tokenResult->token->expires_at)
+                ->toDateTimeString()
+        ]);
     }
 }
